@@ -60,7 +60,8 @@ Rails.application.configure do
   config.active_record.verbose_query_logs = true
 
   # Suppress logger output for asset requests.
-  config.assets.quiet = true
+  #config.assets.quiet = true
+  config.assets.debug = true
   config.asset_host = "http://localhost:3000"
 
   # Raises error for missing translations.
