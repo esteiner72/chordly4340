@@ -33,8 +33,24 @@ class ChordSheetsController < ApplicationController
   end
 
   def transpose
-    @chord_sheet.transpose(params[:direction]).save
-    render :show
+    semitones = params[:semitones].to_i
+    direction = params[:direction]
+    
+    Rails.logger.debug "Transposing: semitones=#{semitones}, direction=#{direction}"
+    
+    if semitones > 0 && %w[up down].include?(direction)
+      semitones.times { @chord_sheet.transpose(direction).save }
+      if @chord_sheet.save
+        flash[:notice] = "Chord sheet transposed by #{semitones} semitone#{semitones == 1 ? '' : 's'} #{direction}."
+        render :show
+      else
+        flash[:alert] = "Failed to transpose chord sheet: #{@chord_sheet.errors.full_messages.join(', ')}"
+        render :show, status: :unprocessable_entity
+      end
+    else
+      flash[:alert] = "No transposition applied: semitones=#{semitones.inspect}, direction=#{direction.inspect}"
+      render :show
+    end
   end
 
   def update

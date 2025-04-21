@@ -10,14 +10,18 @@ turbo-frame[id=dom_id(chord_sheet) data-controller="clipboard chord-diagram moda
           .level-item.mt-2
             = button_to transpose_chord_sheet_path(chord_sheet, direction: "up"),
               class: "button is-rounded is-primary", title: "Transpose chords up a semitone",
-              id: "transpose-up", method: :put do
+              id: "transpose-up", method: :put, data: { semitones: "#semitones-select" } do
               span.icon
                 i.fas.fa-arrow-circle-up
 
           .level-item.mt-2
+            .select
+              = select_tag :semitones, options_for_select((1..12).map { |n| ["#{n} semitone#{n == 1 ? '' : 's'}", n] }, 1), id: "semitones-select", class: "semitones-select"      
+
+          .level-item.mt-2
             = button_to transpose_chord_sheet_path(chord_sheet, direction: "down"),
               class: "button is-rounded is-primary", title: "Transpose chords down a semitone",
-              id: "transpose-down", method: :put
+              id: "transpose-down", method: :put, data: { semitones: "#semitones-select" } do
               span.icon
                 i.fas.fa-arrow-circle-down
 
