@@ -1,6 +1,6 @@
 class ChordSheetsController < ApplicationController
-  skip_before_action :authenticate_user!, only: %i[create show transpose update]
-  before_action :authorize_user, only: %i[show transpose update destroy versions restore]
+  skip_before_action :authenticate_user!, only: %i[create show transpose update download_chordpro]
+  before_action :authorize_user, only: %i[show transpose update destroy versions restore download_chordpro]
   before_action :adjust_new_lines, only: %i[create]
 
   def index
@@ -9,11 +9,14 @@ class ChordSheetsController < ApplicationController
   end
 
   def show
+    @chord_sheet = ChordSheet.find(params[:id])
+    @columns     = params[:columns].to_i
+    @columns     = 1 unless [1,2].include?(@columns)
     respond_to do |format|
       format.html
       format.pdf do
         html = render_to_string(layout: "application")
-        send_data Grover.new(html).to_pdf, filename: "#{@chord_sheet.name}.pdf", type: "application/pdf"
+        send_data Grover.new(html).to_pdf, filename: "#{@chord_sheet.name}.pdf", type: "application/pdf", locals: { columns: @columns }
       end
     end
   end
@@ -57,6 +60,16 @@ class ChordSheetsController < ApplicationController
     version = @chord_sheet.versions.find(params[:version_id])
     version.reify.save
     redirect_to @chord_sheet
+  end
+
+  def download_chordpro
+    respond_to do |format|
+      format.text do
+        send_data @chord_sheet.to_chordpro,
+                  filename: "#{@chord_sheet.name}.pro",
+                  type: "text/plain; charset=utf-8"
+      end
+    end
   end
 
   private

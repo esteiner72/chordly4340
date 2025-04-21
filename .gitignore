@@ -41,3 +41,4 @@
 /config/credentials/production.key
 
 .DS_Store
+config/database.yml

@@ -38,6 +38,12 @@ Rails.application.routes.draw do
     patch :reorder, on: :member
   end
 
+  resources :chord_sheets do
+    member do
+      get :download_chordpro
+    end
+  end
+
   resource :trial, only: %i[new]
 
   constraints FlipperUIAccess do
