@@ -36,3 +36,6 @@ application.register("chord-diagram", ChordDiagramController)
 
 import ModalController from "./modal_controller"
 application.register("modal", ModalController)
+
+import PdfDropdownController from "./pdf_dropdown_controller"
+application.register("pdf-dropdown", PdfDropdownController);

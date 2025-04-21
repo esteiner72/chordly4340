@@ -45,10 +45,24 @@ turbo-frame[id=dom_id(chord_sheet) data-controller="clipboard chord-diagram moda
               title: "Copy to clipboard"
               span.icon
                 i.fas.fa-copy
-            = button_to chord_sheet_path(chord_sheet, format: :pdf),
-              class: "button is-rounded is-info", id: "export", disabled: !user_signed_in?,
-              method: :get, title: "Download PDF"
+            div.dropdown#pdfDropdown[data-controller="pdf-dropdown"]
+              button.button.is-rounded.is-info.mr-2.dropdown-trigger[data-action="click->pdf-dropdown#toggle" title="Download PDF"]
+                span.icon
+                  i.fas.fa-download
+              div.dropdown-menu role="menu"
+                div.dropdown-content
+                  = link_to "1 column",
+                            chord_sheet_path(@chord_sheet, format: :pdf, columns: 1),
+                            class: "dropdown-item"
+                  = link_to "2 columns",
+                            chord_sheet_path(@chord_sheet, format: :pdf, columns: 2),
+                            class: "dropdown-item"
+            = button_to download_chordpro_chord_sheet_path(chord_sheet, format: :text),
+              class: "button is-rounded is-info", id: "export-chordpro",
+              method: :get, title: "Download ChordPro"
               span.icon
-                i.fas.fa-download
+                = image_tag "/favicons/chordpro-icon.png",
+                        alt: "ChordPro",
+                        size: "18x18"
 
   = render("content", chord_sheet:)

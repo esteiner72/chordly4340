@@ -1,10 +1,16 @@
-span.icon-text.is-align-items-center
-  h1.title.is-1.p-2#show-page-title
-    = @chord_sheet.name
-
-div
-  pre
-    span.icon.is-medium.edit-icon#content-edit-icon
-    - @chord_sheet.content.each do |line|
-      span class=(line["type"] == "chords" ? "chord-line" : "lyric-line")
-        = line["content"]
+head
+  meta charset="utf-8"
+  style
+    | .cols-1 { column-count: 1; column-fill: balance; }
+    | .cols-2 { column-count: 2; column-gap: 1em; column-fill: balance; }
+    | .chord-line, .lyric-line { display: block; margin: 0.2em 0; }
+body
+  span.icon-text.is-align-items-center
+    h1.title.is-1.p-2#show-page-title
+      = @chord_sheet.name
+  div class="cols-#{@columns}"
+    pre
+      span.icon.is-medium.edit-icon#content-edit-icon
+      - @chord_sheet.content.each do |line|
+        span class=(line["type"] == "chords" ? "chord-line" : "lyric-line")
+          = line["content"]
