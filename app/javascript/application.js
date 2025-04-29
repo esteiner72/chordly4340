@@ -9,32 +9,38 @@ import '@fortawesome/fontawesome-free/js/brands.js'
 import "trix"
 import "@rails/actiontext"
 import LocalTime from "local-time"
-  
+
 LocalTime.start()
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("turbo:load", () => {
     console.log("JavaScript loaded");
+
+    // Skips setup when not on a music sheet page
+    if (!window.location.pathname.match(/^\/chord_sheets\/\d+$/)) {
+      return;
+    }
+
     const buttons = document.querySelectorAll("#transpose-up, #transpose-down");
-    
+
     if (buttons.length === 0) {
       console.error("No buttons found with IDs #transpose-up or #transpose-down");
       return;
     }
     console.log(`Found ${buttons.length} buttons`);
-  
+
     buttons.forEach(button => {
       console.log(`Attaching click listener to ${button.id}`);
       button.addEventListener("click", (event) => {
         console.log(`Button clicked: ${button.id}`);
         event.preventDefault();
-        
+
         const form = button.closest("form");
         if (!form) {
           console.error("No form found for button:", button.id);
           return;
         }
         console.log("Form action:", form.action);
-  
+
         const semitonesSelect = document.querySelector(button.dataset.semitones);
         if (!semitonesSelect) {
           console.error("Semitones select not found:", button.dataset.semitones);
@@ -42,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         const semitonesValue = semitonesSelect.value;
         console.log(`Semitones value: ${semitonesValue}`);
-  
+
         let input = form.querySelector("input[name='semitones']");
         if (!input) {
           input = document.createElement("input");
